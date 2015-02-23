@@ -76,10 +76,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FileStats.cpp" />
     <ClCompile Include="HW_2.cpp" />
+    <ClCompile Include="Problem_1.cpp" />
+    <ClCompile Include="Problem_2.cpp" />
+    <ClCompile Include="Problem_3.cpp" />
+    <ClCompile Include="Symbol.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FileStats.h" />
     <ClInclude Include="HW_2.h" />
+    <ClInclude Include="QMEnc.h" />
+    <ClInclude Include="Symbol.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

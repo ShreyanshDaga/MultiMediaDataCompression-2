@@ -9,7 +9,6 @@
 using namespace std;
 
 int PrintMenu();
-void Problem_1_A();
 void Problem_1_B();
 void Problem_2_A();
 void Problem_2_B();
