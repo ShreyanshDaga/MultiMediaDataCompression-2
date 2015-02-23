@@ -23,7 +23,7 @@ public:
 	float GetEntropy();
 	void SetFileName(string strFileName);
 	Symbol* GetSymbolTable();
-	void WriteFileStats();
+	void WriteFileStats(int iTotSymbolCount);
 };
 
 #endif

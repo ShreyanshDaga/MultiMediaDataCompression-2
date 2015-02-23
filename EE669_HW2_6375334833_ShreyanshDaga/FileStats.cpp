@@ -36,18 +36,22 @@ void FileStats::GenerateFileStats()
 	for (int i = 0; i < this->iFileSize; i++)
 	{
 		unsigned int uByte = (unsigned int)fgetc(this->fp);
+		bitset<8> bByte(uByte);
+
 		for (int j = 0; j < 8; j++)
 		{
-			int bBit = 0x01 && (uByte >> j);
+			bitset<8> bByte(uByte);
+			unsigned int bBit = bByte[j];			
 			this->symTable[bBit].IncrementSymbolCount();
 		}
 	}
 
 	// Calculate Probability
+	int iTotSymbolCount = this->symTable[0].GetSymbolCount() + this->symTable[1].GetSymbolCount();
 	float fProb;
-	fProb = ((float) (this->symTable[0].GetSymbolCount())) / (float)(this->iFileSize);
+	fProb = ((float)(this->symTable[0].GetSymbolCount())) / (float)(iTotSymbolCount);
 	this->symTable[0].SetProbability(fProb);
-	fProb = ((float)(this->symTable[1].GetSymbolCount())) / (float)(this->iFileSize);
+	fProb = ((float)(this->symTable[1].GetSymbolCount())) / (float)(iTotSymbolCount);
 	this->symTable[1].SetProbability(fProb);
 
 	// Calculate Entropy
@@ -59,6 +63,9 @@ void FileStats::GenerateFileStats()
 	// Stats Computed, close the file
 	fclose(this->fp);
 	this->bStats = true;
+
+	// Write FileStats
+	this->WriteFileStats(iTotSymbolCount);
 }
 
 string FileStats::GetFileName()
@@ -107,12 +114,12 @@ Symbol* FileStats::GetSymbolTable()
 	}
 }
 
-void FileStats::WriteFileStats()
+void FileStats::WriteFileStats(int iTotSymbolCount)
 {
 	// OP file name
 	string strOPFileName(this->strFileName);	
 	int iPos = strOPFileName.find('.');
-	string strOPFileName = strOPFileName.substr(0, iPos) + "_Stats.txt";
+	strOPFileName = strOPFileName.substr(0, iPos) + "_Stats.txt";
 	
 	// Open the file
 	FILE *fp = fopen(strOPFileName.c_str(), "w");
@@ -122,16 +129,17 @@ void FileStats::WriteFileStats()
 	fprintf(fp, "Input File Name: %s", this->strFileName.c_str());
 	fprintf(fp, "\nEntropy: %f", this->fEntropy);
 	fprintf(fp, "\nTotal Symbols: %d", 2);
+	fprintf(fp, "\nTotal Symbol Count: %d", iTotSymbolCount);
 	fprintf(fp, "\n\nSymbol(Binary) : Relative Frequnecy");
 
 	// For Symbol 0
 	string szProb = to_string(this->symTable[0].GetProbability());	
-	string szFinal = "\n0  : " + szProb;
+	string szFinal = "\n      0        : " + szProb;
 	fprintf(fp, "%s", szFinal.c_str());
 
 	// For Symbol 1
 	szProb = to_string(this->symTable[1].GetProbability());
-	szFinal = "\n0  : " + szProb;
+	szFinal = "\n      1        : " + szProb;
 	fprintf(fp, "%s", szFinal.c_str());
 
 	// Close the file 
