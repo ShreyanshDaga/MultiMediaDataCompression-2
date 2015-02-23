@@ -6,24 +6,24 @@
 
 class FileStats
 {
-private:
-	string strFileName;
-	int iFileSize;
-	FILE *fp;
-	float fEntropy;
-	bool bStats;	
-	Symbol symTable[2];				// For only 2 symbols 0 and 1
-
-public:
-	FileStats();
-	FileStats(string strFileName);
-	void GenerateFileStats();
-	string GetFileName();
-	int GetFileSize();
-	float GetEntropy();
-	void SetFileName(string strFileName);
-	Symbol* GetSymbolTable();
-	void WriteFileStats(int iTotSymbolCount);
+	private:
+		string strFileName;
+		int iFileSize;
+		FILE *fp;
+		float fEntropy;
+		bool bStats;	
+		Symbol symTable[2];				// For only 2 symbols 0 and 1
+	
+	public:
+		FileStats();
+		FileStats(string strFileName);
+		void GenerateFileStats();
+		string GetFileName();
+		int GetFileSize();
+		float GetEntropy();
+		void SetFileName(string strFileName);
+		Symbol* GetSymbolTable();
+		void WriteFileStats(int iTotSymbolCount);
 };
 
 #endif

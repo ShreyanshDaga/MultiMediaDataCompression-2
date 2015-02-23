@@ -76,6 +76,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FileIO.cpp" />
     <ClCompile Include="FileStats.cpp" />
     <ClCompile Include="HW_2.cpp" />
     <ClCompile Include="Problem_1.cpp" />
@@ -84,6 +85,7 @@
     <ClCompile Include="Symbol.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FileIO.h" />
     <ClInclude Include="FileStats.h" />
     <ClInclude Include="HW_2.h" />
     <ClInclude Include="QMEnc.h" />
