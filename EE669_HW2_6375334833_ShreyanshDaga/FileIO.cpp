@@ -129,3 +129,8 @@ void FileIO::CloseFile()
 		fclose(this->fp);
 	}
 }
+
+int FileIO::GetFileSize()
+{
+	return this->iFileSize;
+}

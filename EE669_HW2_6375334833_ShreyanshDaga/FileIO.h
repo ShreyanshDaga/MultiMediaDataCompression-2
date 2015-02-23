@@ -25,6 +25,7 @@ class FileIO
 		void WriteCodeToFile(string strCode);
 		bool IsEOF();
 		void CloseFile();
+		int GetFileSize();
 };
 
 #endif // !FILEIO_H_H
