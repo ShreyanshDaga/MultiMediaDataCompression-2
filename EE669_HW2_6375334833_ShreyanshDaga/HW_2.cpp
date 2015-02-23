@@ -1,7 +1,11 @@
 #include "HW_2.h"
+#include "FileIO.h"
+
+void TestFileIO();
 
 int main(char args[])
 {
+	TestFileIO();
 	int iCh = 0;
 
 	while (1)
@@ -73,4 +77,75 @@ int PrintMenu()
 
 
 	return iCh;
+}
+
+void TestFileIO()
+{
+	// Writing to File
+	FileIO fileWrite("Test_1.dat", true);
+
+	// Write a byte
+	fileWrite.WriteBitToFile(1);
+	fileWrite.WriteBitToFile(0);
+	fileWrite.WriteBitToFile(1);
+	fileWrite.WriteBitToFile(0);
+	fileWrite.WriteBitToFile(1);
+	fileWrite.WriteBitToFile(0);
+	fileWrite.WriteBitToFile(1);
+	fileWrite.WriteBitToFile(0);
+
+	fileWrite.WriteBitToFile(0);
+	fileWrite.WriteBitToFile(0);
+	fileWrite.WriteBitToFile(1);
+	fileWrite.WriteBitToFile(1);
+	fileWrite.WriteBitToFile(0);
+	fileWrite.WriteBitToFile(0);
+	fileWrite.WriteBitToFile(0);
+	fileWrite.WriteBitToFile(0);
+
+	fileWrite.WriteLastByte();
+
+	// Reading from File
+	FileIO fileRead("text.dat", false);
+	
+	int iInt;
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n";
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n";
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n";
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+	//cout << "\n" << fileRead.ReadBitFromFile();
+
+	cin >> iInt;
+
+	fileRead.CloseFile();
 }

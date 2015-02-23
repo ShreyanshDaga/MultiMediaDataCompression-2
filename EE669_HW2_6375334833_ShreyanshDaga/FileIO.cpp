@@ -12,6 +12,7 @@ FileIO::FileIO()
 }
 
 FileIO::FileIO(string strFileName, bool bMode)
+	: FileIO()
 {
 	this->strFileName = strFileName;
 	this->bMode = bMode;
@@ -84,7 +85,7 @@ void FileIO::WriteByteToFile(unsigned int uByte)
 {
 	if (bMode)
 	{
-
+		fputc(uByte, this->fp);
 	}
 }
 
