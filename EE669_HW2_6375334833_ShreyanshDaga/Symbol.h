@@ -8,6 +8,7 @@ class Symbol
 private:
 	int iSymbol;
 	float fProb;
+	int iSymbolCount;
 
 public:
 	Symbol();
@@ -16,6 +17,8 @@ public:
 	void SetProbability(float fProb);
 	int GetSymbol();
 	float GetProbability();
+	void IncrementSymbolCount(){ this->iSymbolCount++; }
+	int GetSymbolCount(){ return this->iSymbolCount; }
 };
 
 #endif // !SYMBOL_H_
