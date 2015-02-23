@@ -1,20 +1,23 @@
 #ifndef QMENC_H_H
 #define QMENC_H_H
 
-#include"HW_2.h"
+#include "HW_2.h"
+#include "QMTableEntry.h"
 
 class QMEnc
 {
 	private:
-		// State Transition Table
-		// Input File Stats
-		// Q
-		// A
-		// C
+		unsigned int A;
+		unsigned int C;
+		int iCurrState;
+		unsigned int Qe;
+		bool bCarry, bLPS, bMPS;
+		QMTableEntry QMTable[45];
+		vector<QMTableEntry*> QMTable;
 
 	public:
-		QMEnc(/*FileStats*/);		
-		void Encode();
+		QMEnc();
+		void LoadQMTable(string strTableFile);
 };
 
 #endif

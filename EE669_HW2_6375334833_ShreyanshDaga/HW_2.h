@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
+#include <vector>
 #include <bitset>
 
 using namespace std;

@@ -5,7 +5,7 @@ void TestFileIO();
 
 int main(char args[])
 {
-	TestFileIO();
+	//TestFileIO();
 	int iCh = 0;
 
 	while (1)

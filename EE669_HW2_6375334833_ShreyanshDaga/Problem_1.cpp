@@ -8,5 +8,4 @@ void Problem_1_B()
 	FileStats fImage("image.dat");
 	FileStats fBin("binary.dat");
 	FileStats fAudio("audio.dat");
-
 }
