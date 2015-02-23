@@ -20,9 +20,10 @@ public:
 	void GenerateFileStats();
 	string GetFileName();
 	int GetFileSize();
-	float GetRntropy();
+	float GetEntropy();
 	void SetFileName(string strFileName);
 	Symbol* GetSymbolTable();
+	void WriteFileStats();
 };
 
 #endif

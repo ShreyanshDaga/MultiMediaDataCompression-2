@@ -5,13 +5,16 @@ FileStats::FileStats()
 {
 	// Default ctor
 }
+
 FileStats::FileStats(string strFileName)
 {
 	this->strFileName = strFileName;
 	this->bStats = false;
-
+	this->iFileSize = 0;
+	
 	this->GenerateFileStats();
 }
+
 void FileStats::GenerateFileStats()
 {
 	// Open the file
@@ -53,26 +56,84 @@ void FileStats::GenerateFileStats()
 	this->fEntropy += this->symTable[1].GetProbability()*log10f(this->symTable[1].GetProbability()) / log10f(2.00f);
 	this->fEntropy *= -1.00f;
 
-	// Stats Computed
+	// Stats Computed, close the file
+	fclose(this->fp);
 	this->bStats = true;
 }
+
 string FileStats::GetFileName()
 {
-
+	return this->strFileName;
 }
+
 int FileStats::GetFileSize()
 {
-
+	if (this->bStats)
+		return this->iFileSize;
+	else
+	{
+		this->GenerateFileStats();
+		return this->iFileSize;
+	}
 }
-float FileStats::GetRntropy()
+
+float FileStats::GetEntropy()
 {
-
+	if (this->bStats)
+		return this->iFileSize;
+	else
+	{
+		this->GenerateFileStats();
+		return this->fEntropy;
+	}
 }
+
 void FileStats::SetFileName(string strFileName)
 {
-
+	if (!this->bStats)
+	{
+		this->strFileName = strFileName;
+	}	
 }
+
 Symbol* FileStats::GetSymbolTable()
 {
+	if (this->bStats)
+		return this->symTable;
+	else
+	{
+		this->GenerateFileStats();
+		return this->symTable;
+	}
+}
 
+void FileStats::WriteFileStats()
+{
+	// OP file name
+	string strOPFileName(this->strFileName);	
+	int iPos = strOPFileName.find('.');
+	string strOPFileName = strOPFileName.substr(0, iPos) + "_Stats.txt";
+	
+	// Open the file
+	FILE *fp = fopen(strOPFileName.c_str(), "w");
+	/// Handle Exception
+
+	// Write Stats
+	fprintf(fp, "Input File Name: %s", this->strFileName.c_str());
+	fprintf(fp, "\nEntropy: %f", this->fEntropy);
+	fprintf(fp, "\nTotal Symbols: %d", 2);
+	fprintf(fp, "\n\nSymbol(Binary) : Relative Frequnecy");
+
+	// For Symbol 0
+	string szProb = to_string(this->symTable[0].GetProbability());	
+	string szFinal = "\n0  : " + szProb;
+	fprintf(fp, "%s", szFinal.c_str());
+
+	// For Symbol 1
+	szProb = to_string(this->symTable[1].GetProbability());
+	szFinal = "\n0  : " + szProb;
+	fprintf(fp, "%s", szFinal.c_str());
+
+	// Close the file 
+	fclose(fp);
 }
