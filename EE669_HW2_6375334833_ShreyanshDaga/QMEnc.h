@@ -18,6 +18,9 @@ class QMEnc
 	public:
 		QMEnc();
 		void LoadQMTable(string strTableFile);
+		void Encode();
+		void ReNormalize();
+		void ChangeQe(bool Symbol);
 };
 
 #endif
