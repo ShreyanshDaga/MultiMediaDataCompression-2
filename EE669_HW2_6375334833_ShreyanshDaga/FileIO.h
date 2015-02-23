@@ -21,8 +21,10 @@ class FileIO
 		unsigned int ReadByteFromFile();
 		void WriteBitToFile(bool bBit);
 		void WriteByteToFile(unsigned int uByte);
+		void WriteLastByte();
 		void WriteCodeToFile(string strCode);
 		bool IsEOF();
+		void CloseFile();
 };
 
 #endif // !FILEIO_H_H

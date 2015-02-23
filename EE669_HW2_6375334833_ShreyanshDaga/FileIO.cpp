@@ -33,7 +33,7 @@ FileIO::FileIO(string strFileName, bool bMode)
 		fread(this->fileBuffer, sizeof(char), this->iFileSize, this->fp);
 
 		// Close the file
-		fclose(this->fp);
+		this->CloseFile();
 	}
 }
 
@@ -62,11 +62,22 @@ unsigned int FileIO::ReadByteFromFile()
 	{
 
 	}
+
+	return 0;
 }
 
 void FileIO::WriteBitToFile(bool bBit)
 {
+	// Stack the bit to the WriteByte
+	this->iWByte |= (bBit ? 1 : 0) << (7 - this->iWs);
+	this->iWs++;
 
+	if (this->iWs == 8)
+	{
+		this->WriteByteToFile(this->iWByte);
+		this->iWByte = 0;
+		this->iWs = 0;
+	}
 }
 
 void FileIO::WriteByteToFile(unsigned int uByte)
@@ -74,6 +85,26 @@ void FileIO::WriteByteToFile(unsigned int uByte)
 	if (bMode)
 	{
 
+	}
+}
+
+void FileIO::WriteLastByte()
+{
+	if (bMode)
+	{
+		if (this->iWs <= 8)
+		{
+			for (int i = 0; i < this->iWs; i++)
+			{
+				this->iWByte |= 0 << this->iWs;
+			}
+
+			// Wrap and write the last byte to file
+			this->WriteByteToFile(this->iWByte);
+			
+			// Close File
+			this->CloseFile();
+		}
 	}
 }
 
@@ -88,4 +119,12 @@ bool FileIO::IsEOF()
 		return true;
 	else
 		return false;
+}
+
+void FileIO::CloseFile()
+{
+	if (this->bMode)
+	{
+		fclose(this->fp);
+	}
 }
