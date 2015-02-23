@@ -1,11 +1,20 @@
 #include "HW_2.h"
 #include "FileIO.h"
+#include "QMEnc.h"
 
 void TestFileIO();
+void TestQMTableLoad()
+{
+	QMEnc enc;
+
+	enc.LoadQMTable("QM_state_transition_table.txt");
+
+}
 
 int main(char args[])
 {
 	//TestFileIO();
+	TestQMTableLoad();
 	int iCh = 0;
 
 	while (1)

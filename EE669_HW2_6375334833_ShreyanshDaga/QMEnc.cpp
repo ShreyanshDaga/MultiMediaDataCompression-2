@@ -14,8 +14,11 @@ void QMEnc::LoadQMTable(string strTableFile)
 
 	// Read file line by line
 	char szLine[80];
-	while (feof(fp))
+	while (!feof(fp))
 	{
+		if (feof(fp))
+			break;
+
 		// Read the line
 		fgets(szLine, 80, fp);
 
@@ -27,7 +30,7 @@ void QMEnc::LoadQMTable(string strTableFile)
 		double dQe;
 
 		iState = strtol(szLine, &pEnd, 10);
-		Qe = strtol(pEnd, &pEnd, 0);
+		Qe = strtol(pEnd, &pEnd, 16);
 		dQe = strtod(pEnd, &pEnd);
 		iIncS = strtol(pEnd, &pEnd, 10);
 		iDecS = strtol(pEnd, NULL, 10);
@@ -35,4 +38,7 @@ void QMEnc::LoadQMTable(string strTableFile)
 		// Add to QMTable
 		this->QMTable.push_back(pQMEntry);		
 	}	
+
+	// Close the file
+	fclose(fp);
 }

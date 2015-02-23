@@ -12,7 +12,7 @@ class QMEnc
 		int iCurrState;
 		unsigned int Qe;
 		bool bCarry, bLPS, bMPS;
-		QMTableEntry QMTable[45];
+		//QMTableEntry QMTable[45];
 		vector<QMTableEntry*> QMTable;
 
 	public:

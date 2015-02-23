@@ -11,7 +11,10 @@ QMTableEntry::QMTableEntry()
 
 QMTableEntry::QMTableEntry(int iState, unsigned int Qe, int iDecS, int iIncS)
 {	
-
+	this->iState = iState;
+	this->iDecS = iDecS;
+	this->iIncS = iIncS;
+	this->Qe = Qe;
 }
 
 void QMTableEntry::SetIncS(int iIncS)
@@ -36,25 +39,20 @@ void QMTableEntry::SetState(int iState)
 
 int QMTableEntry::GetState()
 {
-
+	return this->iState;
 }
 
 unsigned int QMTableEntry::GetQe()
 {
-
+	return this->Qe;
 }
 
 int QMTableEntry::GetIncS()
 {
-
+	return this->iIncS;
 }
 
 int QMTableEntry::GetDecS()
 {
-
-}
-
-void QMTableEntry::PrintStateTable()
-{
-	
+	return this->iDecS;
 }
