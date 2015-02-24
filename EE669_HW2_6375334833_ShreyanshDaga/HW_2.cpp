@@ -14,7 +14,7 @@ void TestQMTableLoad()
 int main(char args[])
 {
 	//TestFileIO();
-	TestQMTableLoad();
+	//TestQMTableLoad();
 	int iCh = 0;
 
 	while (1)

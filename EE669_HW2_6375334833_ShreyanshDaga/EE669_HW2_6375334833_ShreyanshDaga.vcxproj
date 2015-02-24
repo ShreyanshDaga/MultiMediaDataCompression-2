@@ -82,6 +82,7 @@
     <ClCompile Include="Problem_1.cpp" />
     <ClCompile Include="Problem_2.cpp" />
     <ClCompile Include="Problem_3.cpp" />
+    <ClCompile Include="QMCODER.CPP" />
     <ClCompile Include="QMEnc.cpp" />
     <ClCompile Include="QMTableEntry.cpp" />
     <ClCompile Include="Symbol.cpp" />
@@ -90,6 +91,7 @@
     <ClInclude Include="FileIO.h" />
     <ClInclude Include="FileStats.h" />
     <ClInclude Include="HW_2.h" />
+    <ClInclude Include="QMCODER.H" />
     <ClInclude Include="QMEnc.h" />
     <ClInclude Include="QMTableEntry.h" />
     <ClInclude Include="Symbol.h" />

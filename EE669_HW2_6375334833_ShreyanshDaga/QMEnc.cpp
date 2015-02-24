@@ -3,7 +3,13 @@
 
 QMEnc::QMEnc()
 {
-
+	this->A = 0x10000;
+	this->bCarry = false;
+	this->C = 0;
+	this->iCurrState = 10;
+	this->Qe = 0x299A;
+	this->bLPS = 1;
+	this->bMPS = 0;
 }
 
 void QMEnc::LoadQMTable(string strTableFile)

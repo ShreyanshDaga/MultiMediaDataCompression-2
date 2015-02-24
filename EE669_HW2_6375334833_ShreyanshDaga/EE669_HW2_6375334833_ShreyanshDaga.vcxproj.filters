@@ -42,6 +42,9 @@
     <ClCompile Include="QMEnc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="QMCODER.CPP">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HW_2.h">
@@ -60,6 +63,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="QMTableEntry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QMCODER.H">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

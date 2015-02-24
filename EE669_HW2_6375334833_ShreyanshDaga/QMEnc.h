@@ -11,7 +11,7 @@ class QMEnc
 		FileIO *pfileIP;
 		FileIO *pfileOP;
 		unsigned int A;
-		unsigned int C;
+		unsigned short int C;
 		int iCurrState;
 		unsigned int Qe;
 		bool bCarry, bLPS, bMPS;		
