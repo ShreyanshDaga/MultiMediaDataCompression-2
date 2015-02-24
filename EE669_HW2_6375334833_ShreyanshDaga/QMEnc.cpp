@@ -42,3 +42,105 @@ void QMEnc::LoadQMTable(string strTableFile)
 	// Close the file
 	fclose(fp);
 }
+
+void QMEnc::Encode(string strIPFileName)
+{
+	// FILEIO
+	this->pfileIP = new FileIO(strIPFileName.c_str(), false);
+	this->pfileOP = new FileIO("output.dat", true);
+
+	// QM Encoding algorithm
+	while (!pfileIP->IsEOF())
+	{
+		if (pfileIP->ReadBitFromFile() == this->bMPS)
+		{
+			this->A -= this->Qe;
+			if (this->A < 0x8000)
+			{
+				if (this->A < this->Qe)
+				{
+					if (this->C + this->A > 0xFFFF)
+						this->bCarry = true;
+
+					this->C += this->A;
+					this->A = this->Qe;
+				}
+
+				this->ChangeQe(true);
+				this->ReNormalize();
+			}
+		}
+		else
+		{
+			// This is LPS
+			this->A -= this->Qe;
+			if (this->A >= this->Qe)
+			{
+				if (this->C + this->A > 0xFFFF)
+					this->bCarry = true;
+
+				this->C += this->A;
+				this->A = this->Qe;
+			}
+			this->ChangeQe(false);
+			this->ReNormalize();
+		}
+	}
+
+	this->pfileOP->WriteLastByte();
+	cout << "Op is generated";
+}
+
+void QMEnc::ReNormalize()
+{
+	if (this->bCarry)
+	{
+		this->pfileOP->WriteBitToFile(true);
+		this->bCarry = false;
+	}
+
+	// Output until value of A >= 0x8000
+	while (this->A < 0x8000)
+	{
+		this->A = this->A << 1;
+
+		//if MSB = 0
+		if ((this->C & 0x8000) == 0)
+		{
+			// Write 0
+			this->pfileOP->WriteBitToFile(false);
+		}
+		else // if MSB = 1
+		{
+			// Write 1
+			this->pfileOP->WriteBitToFile(true);
+		}
+
+		this->C = this->C << 1;
+	}
+}
+
+void QMEnc::ChangeQe(bool bSymbol)
+{
+	// IF MPS is recvd increment state
+	if (bSymbol)
+	{
+		int iTemp = this->QMTable[this->iCurrState]->GetIncS();
+		this->iCurrState += iTemp;
+	}
+	else // IF LSP is recvd decrement state
+	{
+		int iTemp = this->QMTable[this->iCurrState]->GetDecS();
+		this->iCurrState -= iTemp;
+
+		// Swap MPS and LPS
+		if (this->QMTable[this->iCurrState]->GetDecS() == -1)
+		{
+			iTemp = this->bMPS;
+			this->bMPS = this->bLPS;
+			this->bLPS = iTemp;
+		}
+	}
+
+	this->Qe = this->QMTable[this->iCurrState]->GetQe();
+}
