@@ -1,4 +1,5 @@
 #include "LMaxSQ.h"
+#include "FileIO.h"
 
 LMaxSQ::LMaxSQ()
 {
@@ -12,7 +13,26 @@ void LMaxSQ::SetTrainingImages(string *strFiles, int iFileNum, int iNumBits)
 {
 	// Set Images
 	this->strTrainFiles = new string[iFileNum];
+	FileIO **pFiles = new FileIO*[iFileNum];
 	
+	for (int i = 0; i < iFileNum; i++)
+	{
+		pFiles[i] = new FileIO(this->strTrainFiles[i].c_str(), false);
+		this->iFinalSize += pFiles[i]->GetFileSize();
+	}
+	
+	// Allocate Total Memory
+	this->pcTrainingData = new unsigned char[this->iFinalSize];
+
+	// Get all the file content
+	for (int i = 0; i < iFileNum; i++)
+	{
+		for (int j = 0; j < pFiles[i]->GetFileSize(); j++)
+		{
+			this->pcTrainingData[i*iFileNum + j] = pFiles[i]->ReadByteFromFile();
+		}
+	}
+
 	// Set Q Level
 	this->SetQLevel(iNumBits);
 }
