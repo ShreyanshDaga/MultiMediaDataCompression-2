@@ -26,6 +26,7 @@ class FileIO
 		bool IsEOF();
 		void CloseFile();
 		int GetFileSize();
+		void PreProcessFile();
 };
 
 #endif // !FILEIO_H_H

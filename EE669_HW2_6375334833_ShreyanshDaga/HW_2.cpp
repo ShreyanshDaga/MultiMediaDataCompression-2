@@ -11,10 +11,58 @@ void TestQMTableLoad()
 
 }
 
+void WriteTestFile()
+{
+	FileIO file("test_file.dat", true);
+
+	// First Byte
+	file.WriteBitToFile(1);
+	file.WriteBitToFile(0);
+	file.WriteBitToFile(0);
+	file.WriteBitToFile(0);
+	file.WriteBitToFile(1);
+	file.WriteBitToFile(1);
+	file.WriteBitToFile(0);
+	file.WriteBitToFile(0);
+	// Second Byte
+	file.WriteBitToFile(1);
+	file.WriteBitToFile(0);
+	file.WriteBitToFile(0);
+	file.WriteBitToFile(0);
+	file.WriteBitToFile(1);
+	file.WriteBitToFile(1);
+	file.WriteBitToFile(0);
+	file.WriteBitToFile(1);
+	// Third Byte
+	file.WriteBitToFile(1);
+	file.WriteBitToFile(0);
+	file.WriteBitToFile(0);
+	file.WriteBitToFile(1);
+	file.WriteBitToFile(0);
+	file.WriteBitToFile(1);
+	file.WriteBitToFile(1);
+	file.WriteBitToFile(0);
+	// Fourth Byte
+	/*file.WriteBitToFile(1);
+	file.WriteBitToFile(1);
+	file.WriteBitToFile(1);
+	file.WriteBitToFile(1);
+	file.WriteBitToFile(1);
+	file.WriteBitToFile(0);
+	file.WriteBitToFile(0);
+	file.WriteBitToFile(1);
+*/
+	file.CloseFile();
+
+	FileIO file2("test_file.dat", false);
+	file2.PreProcessFile();
+}
+
 int main(char args[])
 {
 	//TestFileIO();
 	//TestQMTableLoad();
+	//WriteTestFile();
 	int iCh = 0;
 
 	while (1)

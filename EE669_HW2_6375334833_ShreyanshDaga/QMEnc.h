@@ -20,7 +20,7 @@ class QMEnc
 	public:
 		QMEnc();
 		void LoadQMTable(string strTableFile);
-		void Encode(string strIPFileName);
+		void Encode(string strIPFileName, bool bPre);
 		void ReNormalize();
 		void ChangeQe(bool bSymbol);
 };

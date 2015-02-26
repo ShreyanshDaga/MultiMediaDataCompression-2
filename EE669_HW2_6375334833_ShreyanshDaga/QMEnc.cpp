@@ -49,11 +49,14 @@ void QMEnc::LoadQMTable(string strTableFile)
 	fclose(fp);
 }
 
-void QMEnc::Encode(string strIPFileName)
+void QMEnc::Encode(string strIPFileName, bool bPre)
 {
 	// FILEIO
 	this->pfileIP = new FileIO(strIPFileName.c_str(), false);
 	this->pfileOP = new FileIO("output.dat", true);
+
+	if (bPre)
+		this->pfileIP->PreProcessFile();
 
 	// QM Encoding algorithm
 	while (!pfileIP->IsEOF())

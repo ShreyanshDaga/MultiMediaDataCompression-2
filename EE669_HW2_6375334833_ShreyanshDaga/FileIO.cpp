@@ -134,3 +134,31 @@ int FileIO::GetFileSize()
 {
 	return this->iFileSize;
 }
+
+void FileIO::PreProcessFile()
+{	
+	FileIO *pTemp = new FileIO("temp.dat", true);	
+
+	char cMasks[8] = { 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
+
+	// Map bit planes here
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < this->iFileSize; j++)
+		{
+			bool bBit = this->fileBuffer[j] & cMasks[i];
+			pTemp->WriteBitToFile(bBit);
+		}
+	}
+
+	// Close Temp file
+	pTemp->CloseFile();
+
+	//Reload Tempfile in read mode
+	pTemp = new FileIO("temp.dat", false);
+
+	for (int i = 0; i < this->iFileSize; i++)
+		this->fileBuffer[i] = pTemp->fileBuffer[i];
+	
+	pTemp->CloseFile();
+}
