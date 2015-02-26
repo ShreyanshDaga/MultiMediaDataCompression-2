@@ -3,22 +3,27 @@
 #include "QMEnc.h"
 #include "QMCODER.H"
 
+
+void EncodeUsingCABAC(string strIpFileName, int iCtxSize);
+int GetContext(bool * pCtxArray, int iCtxSize);
+void ShiftBit(bool *pCtxArray, bool bBit, int iCtxSize);
+
 void Problem_1_B()
 {	
 	// Simple BAC
 	// File Statistics for Text file
-	FileStats fText("text.dat");
+	/*FileStats fText("text.dat");
 	QMEnc enc;
 
 	enc.LoadQMTable("QM_state_transition_table.txt");	
-	enc.Encode("text.dat", false);
+	enc.Encode("text.dat", false);*/
 
 	/*FileStats fImage("image.dat");
 	FileStats fBin("binary.dat");
 	FileStats fAudio("audio.dat");*/
 
 	// CABAC
-
+	EncodeUsingCABAC("binary.dat", 1);
 }
 
 void EncodeUsingCABAC(string strIpFileName, int iCtxSize)
