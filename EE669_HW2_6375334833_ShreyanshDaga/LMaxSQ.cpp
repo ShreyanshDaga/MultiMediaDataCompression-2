@@ -199,7 +199,6 @@ float LMaxSQ::GetQValue(unsigned char cByte)
 	}
 }
 
-
 float LMaxSQ::ComputeDistortionRate(float fPrevMSE, float fCurrMSE)
 {
 	return ((fPrevMSE - fCurrMSE) / (fCurrMSE));
@@ -213,4 +212,19 @@ void LMaxSQ::WriteTrainingStats()
 void LMaxSQ::WriteFinalStats()
 {
 
+}
+
+void LMaxSQ::Quantize(string fileName)
+{
+	FileIO fileIP(fileName.c_str(), false);
+	FileIO fileOP("ouput_Q2.dat", true);
+
+	for (int i = 0; i < fileIP.GetFileSize(); i++)
+	{
+		unsigned char cIPByte = fileIP.ReadByteFromFile();
+		unsigned char cOPByte = floor(this->GetQValue(cIPByte) + 0.5);
+		fileOP.WriteByteToFile(cOPByte);
+	}
+
+	// Write Final Statss
 }

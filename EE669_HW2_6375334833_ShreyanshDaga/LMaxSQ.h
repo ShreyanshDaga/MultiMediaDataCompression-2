@@ -35,6 +35,8 @@ class LMaxSQ
 		float ComputeDistortionRate(float fPrevMSE, float fCurrMSE);
 		void WriteTrainingStats();
 		void WriteFinalStats();
+
+		void Quantize(string fileName);
 };
 
 #endif // !LMAXSQ_H_
