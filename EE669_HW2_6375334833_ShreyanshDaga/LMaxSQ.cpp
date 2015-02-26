@@ -2,16 +2,75 @@
 
 LMaxSQ::LMaxSQ()
 {
-
+	this->fDistRate = 1.00f;
+	this->fPSNR = 0.00f;
+	this->fCurrMSE = 0.00f;
+	this->fFinalMSE = 0.00f;	
 }
 
-void LMaxSQ::TrainImgaes(string *strFiles, int iFileNum, int iNumBits)
+void LMaxSQ::SetTrainingImages(string *strFiles, int iFileNum, int iNumBits)
 {
-	// Plot Histograms
-
+	// Set Images
+	this->strTrainFiles = new string[iFileNum];
+	
 	// Set Q Level
 	this->SetQLevel(iNumBits);
+}
 
+void LMaxSQ::TrainImgaes()
+{
+	// Plot Histograms
+	unsigned short *puHist = this->CalcHist(this->pcTrainingData);
+	// Write histogram here
+	
+	// Prepare Uniform Intervals
+	this->InitIntervals();
+
+	// Start Iterations
+	int iItCount = 1;
+	this->CalculateIntervals();
+	this->CalculateNewLevels(puHist);
+	// Print Tpoints
+	// Print Centroid Point
+	this->fCurrMSE = this->GetMSE(this->pcTrainingData);
+	// MSE for ItCount = 1 cout, to file
+	this->fPSNR = 10 * log10f(pow(255, 2) / this->fCurrMSE);
+	// Cout PSNR, to file
+	while (this->fDistRate > 0.001)
+	{
+		// Cout ItCount, to file
+		this->CalculateIntervals();
+		this->CalculateNewLevels(puHist);
+		// Print T Points
+		// Print Centroid Points
+		this->fFinalMSE = this->fCurrMSE;
+		this->fCurrMSE = this->GetMSE(this->pcTrainingData);
+		this->fDistRate = this->ComputeDistortionRate(this->fFinalMSE, this->fCurrMSE);
+		// Cout to file
+		this->fPSNR = 10 * log10f(pow(255, 2) / this->fCurrMSE);
+		// Cout PSNR to file
+	}
+
+	cout << "Training Done!";
+}
+
+unsigned short* LMaxSQ::CalcHist(unsigned char *pcData)
+{
+	unsigned short *puHist = new unsigned short[256];
+	
+	for (int i = 0; i < 256; i++) 
+	{
+		puHist[i] = 0;
+	}
+
+	unsigned char cByte;
+	for (int i = 0; i < this->iFinalSize; i++) 
+	{
+		cByte = (unsigned char)pcData[i];
+		puHist[cByte]++;
+	}	
+
+	return puHist;
 }
 
 void LMaxSQ::PlotHistograms(string *strFiles, int iFileNum)
@@ -52,11 +111,30 @@ void LMaxSQ::CalculateIntervals()
 	}
 }
 
+// Calc new values of centroid
 void LMaxSQ::CalculateNewLevels(unsigned short *puHist)
 {
+	int iN = 0, iD = 0, iLow, iHigh;
+
 	for (int i = 0; i < this->L; i++)
 	{
+		iLow = ceilf(this->pfTPoints[i + 1]);
 
+		if (i == this->L)
+			iHigh = ceilf(this->pfTPoints[i + 1]);
+		else
+			iHigh = floorf(this->pfTPoints[i + 1]);
+
+		iN = 0;
+		iD = 0;
+
+		for (int j = 0; j < iLow; j++)
+		{
+			iN += j*puHist[j];
+			iD += puHist[j];
+		}
+		if (iD != 0)
+			this->pfCentroids[i] = ((float)iN / (float)iD);
 	}
 }
 

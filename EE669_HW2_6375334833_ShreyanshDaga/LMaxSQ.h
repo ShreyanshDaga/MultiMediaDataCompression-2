@@ -20,8 +20,9 @@ class LMaxSQ
 
 	public:
 		LMaxSQ();
-
-		void TrainImgaes(string *strFiles, int iFileNum, int iNumBits);
+		void SetTrainingImages(string *strFiles, int iFileNum, int iNumBits);
+		void TrainImgaes();
+		unsigned short* CalcHist(unsigned char *pcData);
 		void PlotHistograms(string *strFiles, int iFileNum);
 		void SetQLevel(int iNumBits);
 		void InitIntervals();
