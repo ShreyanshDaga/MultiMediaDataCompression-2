@@ -9,12 +9,13 @@ class FileIO
 		string strFileName;
 		FILE *fp;
 		bool bMode;
-		char *fileBuffer;
+		//char *fileBuffer;
 		int iFileSize;
 		unsigned int iRs, iRByte, iRp;
 		unsigned int iWs, iWByte;
 
 	public:
+		char *fileBuffer;
 		FileIO();
 		FileIO(string strFileName, bool bMode);
 		bool ReadBitFromFile();

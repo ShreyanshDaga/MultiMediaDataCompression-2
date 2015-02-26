@@ -7,16 +7,18 @@ LMaxSQ::LMaxSQ()
 	this->fPSNR = 0.00f;
 	this->fCurrMSE = 0.00f;
 	this->fFinalMSE = 0.00f;	
+	this->iFinalSize = 0;
 }
 
 void LMaxSQ::SetTrainingImages(string *strFiles, int iFileNum, int iNumBits)
 {
 	// Set Images
-	this->strTrainFiles = new string[iFileNum];
+	this->strTrainFiles = new string[iFileNum];	
 	FileIO **pFiles = new FileIO*[iFileNum];
 	
 	for (int i = 0; i < iFileNum; i++)
 	{
+		this->strTrainFiles[i] = strFiles[i];
 		pFiles[i] = new FileIO(this->strTrainFiles[i].c_str(), false);
 		this->iFinalSize += pFiles[i]->GetFileSize();
 	}
@@ -29,7 +31,7 @@ void LMaxSQ::SetTrainingImages(string *strFiles, int iFileNum, int iNumBits)
 	{
 		for (int j = 0; j < pFiles[i]->GetFileSize(); j++)
 		{
-			this->pcTrainingData[i*iFileNum + j] = pFiles[i]->ReadByteFromFile();
+			this->pcTrainingData[i*iFileNum + j] = pFiles[i]->fileBuffer[j];
 		}
 	}
 
@@ -42,7 +44,10 @@ void LMaxSQ::TrainImgaes()
 	// Plot Histograms
 	unsigned short *puHist = this->CalcHist(this->pcTrainingData);
 	// Write histogram here
-	
+	/// DEBUG
+	for (int i = 0; i < 256; i++)
+		cout << " " << puHist[i];
+	///
 	// Prepare Uniform Intervals
 	this->InitIntervals();
 
@@ -59,6 +64,10 @@ void LMaxSQ::TrainImgaes()
 	while (this->fDistRate > 0.001)
 	{
 		// Cout ItCount, to file
+		/// DEBUG
+		cout << " " << iItCount;
+		iItCount++;
+		///
 		this->CalculateIntervals();
 		this->CalculateNewLevels(puHist);
 		// Print T Points
@@ -69,6 +78,9 @@ void LMaxSQ::TrainImgaes()
 		// Cout to file
 		this->fPSNR = 10 * log10f(pow(255, 2) / this->fCurrMSE);
 		// Cout PSNR to file
+		/// DEBUG
+		cout << " " << this->fPSNR;
+		///
 	}
 
 	cout << "Training Done!";
@@ -80,7 +92,7 @@ unsigned short* LMaxSQ::CalcHist(unsigned char *pcData)
 	
 	for (int i = 0; i < 256; i++) 
 	{
-		puHist[i] = 0;
+		puHist[i] = 1;
 	}
 
 	unsigned char cByte;
@@ -120,6 +132,9 @@ void LMaxSQ::InitIntervals()
 	for (int i = 0; i < this->L; i++)
 	{
 		this->pfCentroids[i] = (i + 0.5) * fIntvSize;
+		/// DEBUG
+		cout << " " << pfCentroids[i];
+		/// DEBUG
 	}
 }
 
@@ -148,11 +163,12 @@ void LMaxSQ::CalculateNewLevels(unsigned short *puHist)
 		iN = 0;
 		iD = 0;
 
-		for (int j = 0; j < iLow; j++)
+		for (int j = iLow; j <= iHigh; j++)
 		{
 			iN += j*puHist[j];
 			iD += puHist[j];
 		}
+
 		if (iD != 0)
 			this->pfCentroids[i] = ((float)iN / (float)iD);
 	}
@@ -194,8 +210,8 @@ float LMaxSQ::GetQValue(unsigned char cByte)
 
 	for (int i = 0; i < this->L; i++)
 	{
-		if (cByte >= this->pfTPoints[i] && cByte < this->pfTPoints[i + 1]);
-		return this->pfCentroids[i];
+		if (cByte >= this->pfTPoints[i] && cByte < this->pfTPoints[i + 1])
+			return this->pfCentroids[i];
 	}
 }
 
@@ -217,11 +233,12 @@ void LMaxSQ::WriteFinalStats()
 void LMaxSQ::Quantize(string fileName)
 {
 	FileIO fileIP(fileName.c_str(), false);
-	FileIO fileOP("ouput_Q2.dat", true);
+	
+	FileIO fileOP("ouput_Q2_moon.raw", true);
 
 	for (int i = 0; i < fileIP.GetFileSize(); i++)
 	{
-		unsigned char cIPByte = fileIP.ReadByteFromFile();
+		unsigned char cIPByte = fileIP.fileBuffer[i];
 		unsigned char cOPByte = floor(this->GetQValue(cIPByte) + 0.5);
 		fileOP.WriteByteToFile(cOPByte);
 	}
