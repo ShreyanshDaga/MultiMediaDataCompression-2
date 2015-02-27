@@ -8,7 +8,7 @@ void Problem_2_A()
 
 	string	strTrainNames[3] = {"chem.256","house.256","couple.256"};
 
-	SQ.SetTrainingImages(strTrainNames, 3, 3);
+	SQ.SetTrainingImages(strTrainNames, 3, 5);
 	SQ.TrainImgaes();
 
 	// First Image
@@ -17,5 +17,6 @@ void Problem_2_A()
 
 void Problem_2_B()
 {
-	// Vector Quantization
+	// Image Blocking
+
 }
