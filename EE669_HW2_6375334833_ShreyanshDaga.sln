@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EE669_HW2_6375334833_ShreyanshDaga", "EE669_HW2_6375334833_ShreyanshDaga\EE669_HW2_6375334833_ShreyanshDaga.vcxproj", "{D3852BBA-4B49-4AC2-A267-7E401DED4E9F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JPEG", "JPEG\JPEG.vcxproj", "{F7EB1AFE-EA1E-4F87-AEAB-AD2061838D4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -15,6 +17,10 @@ Global
 		{D3852BBA-4B49-4AC2-A267-7E401DED4E9F}.Debug|Win32.Build.0 = Debug|Win32
 		{D3852BBA-4B49-4AC2-A267-7E401DED4E9F}.Release|Win32.ActiveCfg = Release|Win32
 		{D3852BBA-4B49-4AC2-A267-7E401DED4E9F}.Release|Win32.Build.0 = Release|Win32
+		{F7EB1AFE-EA1E-4F87-AEAB-AD2061838D4F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F7EB1AFE-EA1E-4F87-AEAB-AD2061838D4F}.Debug|Win32.Build.0 = Debug|Win32
+		{F7EB1AFE-EA1E-4F87-AEAB-AD2061838D4F}.Release|Win32.ActiveCfg = Release|Win32
+		{F7EB1AFE-EA1E-4F87-AEAB-AD2061838D4F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
