@@ -58,6 +58,8 @@ void WriteTestFile()
 	file2.PreProcessFile();
 }
 
+
+
 int main(char args[])
 {
 	//TestFileIO();
@@ -205,4 +207,13 @@ void TestFileIO()
 	cin >> iInt;
 
 	fileRead.CloseFile();
+}
+
+string GenerateOpFileName(string strIpFileName, string strAppendText)
+{
+
+	int iPos = strIpFileName.find('.');
+	string strOpFileName = strIpFileName.substr(0, iPos) + strAppendText;
+
+	return strOpFileName;
 }

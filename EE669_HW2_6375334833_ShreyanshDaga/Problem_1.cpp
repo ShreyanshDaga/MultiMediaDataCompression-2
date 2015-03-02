@@ -12,18 +12,38 @@ void Problem_1_B()
 {	
 	// Simple BAC
 	// File Statistics for Text file
-	/*FileStats fText("text.dat");
+	FileStats fText("text.dat");
 	QMEnc enc;
-
 	enc.LoadQMTable("QM_state_transition_table.txt");	
-	enc.Encode("text.dat", false);*/
+	
+	enc.Encode("audio.dat", false);
+	enc.Encode("binary.dat", false);
+	enc.Encode("image.dat", false);
 
 	/*FileStats fImage("image.dat");
 	FileStats fBin("binary.dat");
 	FileStats fAudio("audio.dat");*/
 
 	// CABAC
+	EncodeUsingCABAC("image.dat", 1);
+	EncodeUsingCABAC("image.dat", 2);
+	EncodeUsingCABAC("image.dat", 3);
+	EncodeUsingCABAC("image.dat", 4);
+
+	EncodeUsingCABAC("text.dat", 1);
+	EncodeUsingCABAC("text.dat", 2);
+	EncodeUsingCABAC("text.dat", 3);
+	EncodeUsingCABAC("text.dat", 4);
+
+	EncodeUsingCABAC("audio.dat", 1);
+	EncodeUsingCABAC("audio.dat", 2);
+	EncodeUsingCABAC("audio.dat", 3);
+	EncodeUsingCABAC("audio.dat", 4);
+
 	EncodeUsingCABAC("binary.dat", 1);
+	EncodeUsingCABAC("binary.dat", 2);
+	EncodeUsingCABAC("binary.dat", 3);
+	EncodeUsingCABAC("binary.dat", 4);
 }
 
 void EncodeUsingCABAC(string strIpFileName, int iCtxSize)
@@ -33,7 +53,10 @@ void EncodeUsingCABAC(string strIpFileName, int iCtxSize)
 	for (int i = 0; i < iCtxSize; i++) pCtxArray[i] = false;
 
 	FileIO file(strIpFileName.c_str(), false);
-	FILE *fpOut = fopen("cabacout.dat", "w+");
+	char strName[30];
+	sprintf(strName, "_CABAC_%d_OP.dat", iCtxSize);
+	string strOPFileName = GenerateOpFileName(strIpFileName, strName);
+	FILE *fpOut = fopen(strOPFileName.c_str(), "w+");
 
 	QM Enc(fpOut);
 

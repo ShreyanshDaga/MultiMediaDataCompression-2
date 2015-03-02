@@ -53,7 +53,8 @@ void QMEnc::Encode(string strIPFileName, bool bPre)
 {
 	// FILEIO
 	this->pfileIP = new FileIO(strIPFileName.c_str(), false);
-	this->pfileOP = new FileIO("output.dat", true);
+	string strOpFileName = GenerateOpFileName(strIPFileName, "_BAC_op.dat");
+	this->pfileOP = new FileIO(strOpFileName.c_str(), true);
 
 	if (bPre)
 		this->pfileIP->PreProcessFile();

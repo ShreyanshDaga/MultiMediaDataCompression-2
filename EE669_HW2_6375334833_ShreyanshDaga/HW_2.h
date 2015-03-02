@@ -11,6 +11,7 @@
 using namespace std;
 
 int PrintMenu();
+string GenerateOpFileName(string strIpFileName, string strAppendText);
 void Problem_1_B();
 void Problem_2_A();
 void Problem_2_B();

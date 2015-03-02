@@ -4,7 +4,12 @@
 int** ComputeDCT(int iaBlock[16][16]);
 int** ComputeQBlock(int **piaQ50, int iN);
 int** Quantize(int **piaBlock, int **piaQN);
-float GetPSNR (char *pComp, char *pOriginal, int iFIleSize);
+float GetPSNR(unsigned char *pComp, unsigned char *pOriginal, int iFileSize);
+
+void Deblock_1(FileIO *pJFile, FileIO *pOriginal, bool bColor);
+void Deblock_2(FileIO *pJFile, FileIO *pOriginal, bool bColor);
+void Deblock_3(FileIO *pJFile, FileIO *pOriginal, bool bColor);
+void DeBlock_1_Matrix(FileIO *pJFile, FileIO *pOriginal, bool bColor);
 
 void Problem_3_A()
 {
@@ -155,18 +160,43 @@ void Problem_3_B()
 
 void Problem_3_C()
 {
-	// Post-Processing of JPEG images
+	// Post-Processing of JPEG images	
 
 	// Get Raw Images
+	FileIO *pPeppers[5], *pClock[5];
+	FileIO fPepper("pepper.raw", false);
+	//FileIO fClock("clock.raw", false);
+	FileIO fTest("RAW_Q3\\pepper1.raw", false);
 
-	// If color, convert to YUV
+	//Deblock_1(&fTest, &fPepper, true);
+	DeBlock_1_Matrix(&fTest, &fPepper, true);
 
-	// DeBlock H
+	//Read Peppers and Clocl Raw Images
+	for (int i = 0; i < 5; i++)
+	{
+		char strPeppers[30];
+		char strClocks[30];
+		
+		sprintf(strPeppers, "RAW_Q3\\pepper%d.raw", i + 1);
+		sprintf(strClocks, "RAW_Q3\\clock%d.raw", i + 1);						
 
-	// DeBlock V
+		pPeppers[i] = new FileIO(strPeppers, false);
+		//pClock[i] = new FileIO(strClocks, false);		
+	}
 
-	// If color, convert back from YUV
+	// Deblock Method 1
+	for (int i = 0; i < 5; i++)
+	{		
+		Deblock_1(pPeppers[i], &fPepper, true);
+		//Deblock_1(pClock[i], &fClock, false);
 
+		Deblock_2(pPeppers[i], &fPepper, true);
+		//Deblock_2(pClock[i], &fClock, false);
+
+		Deblock_3(pPeppers[i], &fPepper, true);
+		//Deblock_3(pClock[i], &fClock, false);
+
+	}
 	// Write O/p Image
 }
 
@@ -347,7 +377,7 @@ int** Quantize(int **piaBlock, int **piaQN)
 	return pAns;
 }
 
-float GetPSNR(char *pComp, char *pOriginal, int iFileSize)
+float GetPSNR(unsigned char *pComp, unsigned char *pOriginal, int iFileSize)
 {	
 	float fMSE = 0, fDiff, fPSNR;
 
@@ -365,4 +395,230 @@ float GetPSNR(char *pComp, char *pOriginal, int iFileSize)
 	fPSNR = 10 * log10f(pow(255, 2) / fMSE);
 
 	return fPSNR;
+}
+
+void Deblock_1(FileIO *pJFile, FileIO *pOriginal, bool bColor)
+{
+	string strOPFileName = GenerateOpFileName(pJFile->strFileName, "_q3c_op.raw");
+	// Low Pass Filter
+	int iSize, iBPP;
+	int iN;
+
+	if (bColor)
+		iBPP = 3;
+	else
+		iBPP = 1;
+
+	iN = sqrt(pOriginal->GetFileSize() / iBPP);
+
+	unsigned char **pOriginalImageR = new unsigned char*[iN];
+	unsigned char **pOriginalImageG = new unsigned char*[iN];
+	unsigned char **pOriginalImageB = new unsigned char*[iN];
+	unsigned char **pJImageR = new unsigned char*[iN + 2];
+	unsigned char **pJImageG = new unsigned char*[iN + 2];
+	unsigned char **pJImageB = new unsigned char*[iN + 2];
+
+	unsigned char cImageR[256][256][3];
+	unsigned char cJImageR[258][258][3];
+
+	FileIO fOutput(strOPFileName.c_str(), true);
+
+	for (int i = 0; i < iN; i++)
+	{
+		pOriginalImageR[i] = new unsigned char[iN];		
+		pOriginalImageG[i] = new unsigned char[iN];
+		pOriginalImageB[i] = new unsigned char[iN];
+		pJImageR[i] = new unsigned char[iN + 2];
+		pJImageG[i] = new unsigned char[iN + 2];
+		pJImageB[i] = new unsigned char[iN + 2];		
+	}
+	pJImageR[iN] = new unsigned char[iN + 2];
+	pJImageR[iN + 1] = new unsigned char[iN + 2];
+	pJImageG[iN] = new unsigned char[iN + 2];
+	pJImageG[iN + 1] = new unsigned char[iN + 2];
+	pJImageB[iN] = new unsigned char[iN + 2];
+	pJImageB[iN + 1] = new unsigned char[iN + 2];
+	
+	for (int i = 0; i < iN +2; i++)
+	{
+		for (int j = 0; j < iN + 2; j++)
+		{			
+				pJImageR[i][j] = 0;
+				pJImageG[i][j] = 0;
+				pJImageB[i][j] = 0;		
+		}
+	}
+
+	int p = 0;
+	for (int i = 0; i < iN; i++)
+	{
+		for (int j = 0; j < iN; j++)
+		{						
+			if (bColor)
+			{
+				pOriginalImageR[i][j] = (unsigned char)pOriginal->fileBuffer[i*iN + p];
+				pOriginalImageG[i][j] = (unsigned char)pOriginal->fileBuffer[i*iN + p + 1];
+				pOriginalImageB[i][j] = (unsigned char)pOriginal->fileBuffer[i*iN + p + 2];
+
+				pJImageR[i + 1][j + 1] = (unsigned char)pJFile->fileBuffer[i*iN + p];
+				pJImageG[i + 1][j + 1] = (unsigned char)pJFile->fileBuffer[i*iN + p + 1];
+				pJImageB[i + 1][j + 1] = (unsigned char)pJFile->fileBuffer[i*iN + p + 2];
+				p += 3;
+			}
+			else
+			{
+				pJImageR[i + 1][j + 1] = pJFile->fileBuffer[i*iN + j];
+				pOriginalImageR[i][j] = pOriginal->fileBuffer[i*iN + j];
+			}							
+		}
+	}	
+
+	// LPF
+	for (int i = 1; i < iN + 1; i++)
+	{
+		for (int j = 1; j < iN + 1; j++)
+		{
+			unsigned long iSumR = 0;
+			unsigned long iSumG = 0;
+			unsigned long iSumB = 0;
+
+			for (int k = 2; k >= 0; k--)
+			{
+				for (int l = 2; l >= 0; l--)
+				{
+					
+					if (bColor)
+					{
+						iSumR += pJImageR[i - k + 1][j - l + 1];
+						iSumB += pJImageB[i - k + 1][j - l + 1];
+						iSumG += pJImageG[i - k + 1][j - l + 1];
+					}
+					else
+					{
+						iSumR += pJImageR[i - k + 1][j - l + 1];
+					}
+				}
+			}
+			
+			
+			if (bColor)
+			{
+				unsigned char cResR = iSumR / 9;
+				unsigned char cResG = iSumG / 9;
+				unsigned char cResB = iSumB / 9;
+
+				fOutput.WriteByteToFile(cResR);
+				fOutput.WriteByteToFile(cResG);
+				fOutput.WriteByteToFile(cResB);
+			}
+			else
+			{
+				unsigned char cResR = iSumR / 9;
+
+				fOutput.WriteByteToFile(cResR);
+			}
+			//pResImage[i - 1][j - 1] = cRes;			
+		}
+	}
+	fOutput.CloseFile();
+
+	// Calculate PSNR
+
+	
+}
+
+void Deblock_2(FileIO *pJFile, FileIO *pOriginal, bool bColor)
+{
+	// If color, convert back from YUV
+
+	// If color, convert to YUV
+
+	// DeBlock H
+
+	// DeBlock V
+}
+
+void Deblock_3(FileIO *pJFile, FileIO *pOriginal, bool bColor)
+{
+
+}
+
+void DeBlock_1_Matrix(FileIO *pJFile, FileIO *pOriginal, bool bColor)
+{
+	string strOPFileName;
+
+	unsigned char cImageR[256][256][3];
+	unsigned char cJImageR[258][258][3];	
+
+	FileIO fOutput("test_output.raw", true);
+	FILE *fp = fopen("testtest.raw", "w");
+
+	for (int i = 0; i < 258; i++)
+	{
+		for (int j = 0; j < 258; j++)
+		{
+			for (int k = 0; k < 3; k++)
+			{
+				cJImageR[i][j][k] = 128;
+			}
+		}
+	}
+
+	for (int i = 0; i < 256; i++)
+		for (int j = 0; j < 256; j++)
+			for (int k = 0; k < 3; k++)
+				cJImageR[i + 1][j + 1][k] = pJFile->fileBuffer[i * 256 + j * 3 + k];
+
+
+	for (int i = 1; i < 256 + 1; i++)
+	{
+		for (int j = 1; j < 256 + 1; j++)
+		{
+			unsigned long iSumR = 0;
+			unsigned long iSumG = 0;
+			unsigned long iSumB = 0;
+
+			for (int k = 2; k >= 0; k--)
+			{
+				for (int l = 2; l >= 0; l--)
+				{
+
+					if (bColor)
+					{
+						iSumR += cJImageR[i - k + 1][j - l + 1][0];
+						iSumB += cJImageR[i - k + 1][j - l + 1][1];
+						iSumG += cJImageR[i - k + 1][j - l + 1][2];
+					}
+					else
+					{
+						iSumR += cJImageR[i - k + 1][j - l + 1][0];
+					}
+				}
+			}
+
+			if (bColor)
+			{
+				unsigned char cResR = iSumR / 9;
+				unsigned char cResG = iSumG / 9;
+				unsigned char cResB = iSumB / 9;
+
+				fOutput.WriteByteToFile(cResR);
+				fOutput.WriteByteToFile(cResG);
+				fOutput.WriteByteToFile(cResB);
+
+				fputc(cResR, fp);
+				fputc(cResG, fp);
+				fputc(cResB, fp);
+			}
+			else
+			{
+				unsigned char cResR = iSumR / 9;
+
+				fOutput.WriteByteToFile(cResR);
+			}
+		}
+	}
+
+	fOutput.CloseFile();
+	fclose(fp);
 }

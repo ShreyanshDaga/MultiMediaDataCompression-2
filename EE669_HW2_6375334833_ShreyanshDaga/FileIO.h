@@ -5,8 +5,7 @@
 
 class FileIO
 {
-	private:
-		string strFileName;
+	private:		
 		FILE *fp;
 		bool bMode;
 		//char *fileBuffer;
@@ -15,7 +14,8 @@ class FileIO
 		unsigned int iWs, iWByte;
 
 	public:
-		char *fileBuffer;
+		unsigned char *fileBuffer;
+		string strFileName;
 		FileIO();
 		FileIO(string strFileName, bool bMode);
 		bool ReadBitFromFile();

@@ -28,10 +28,10 @@ FileIO::FileIO(string strFileName, bool bMode)
 		fseek(this->fp, 0, SEEK_SET);
 
 		// Allocate Memory for File Contents
-		this->fileBuffer = new char[this->iFileSize];
+		this->fileBuffer = new unsigned char[this->iFileSize];
 
 		// ReadFile in buffer
-		fread(this->fileBuffer, sizeof(char), this->iFileSize, this->fp);
+		fread(this->fileBuffer, sizeof(unsigned char), this->iFileSize, this->fp);
 
 		// Close the file
 		this->CloseFile();
