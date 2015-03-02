@@ -1,11 +1,6 @@
 #include "HW_2.h"
 #include "FileIO.h"
 
-int** ComputeDCT(int iaBlock[16][16]);
-int** ComputeQBlock(int **piaQ50, int iN);
-int** Quantize(int **piaBlock, int **piaQN);
-float GetPSNR(unsigned char *pComp, unsigned char *pOriginal, int iFileSize);
-
 void Deblock_1(FileIO *pJFile, FileIO *pOriginal, bool bColor);
 void Deblock_2(FileIO *pJFile, FileIO *pOriginal, bool bColor);
 void Deblock_3(FileIO *pJFile, FileIO *pOriginal, bool bColor);

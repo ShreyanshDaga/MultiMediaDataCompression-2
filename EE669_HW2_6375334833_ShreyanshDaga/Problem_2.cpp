@@ -10,9 +10,14 @@ void Problem_2_A()
 
 	SQ.SetTrainingImages(strTrainNames, 3, 5);
 	SQ.TrainImgaes();
+	
+	SQ.Quantize("chem.256");
+	SQ.Quantize("house.256");
+	SQ.Quantize("couple.256");
 
-	// First Image
-	SQ.Quantize("moon.256");
+	SQ.Quantize("f16.256");
+	SQ.Quantize("elaine.256");
+	SQ.Quantize("moon.256");	
 }
 
 void Problem_2_B()

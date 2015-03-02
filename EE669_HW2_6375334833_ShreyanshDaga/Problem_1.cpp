@@ -16,13 +16,15 @@ void Problem_1_B()
 	QMEnc enc;
 	enc.LoadQMTable("QM_state_transition_table.txt");	
 	
+	enc.Encode("text.dat", false);
 	enc.Encode("audio.dat", false);
 	enc.Encode("binary.dat", false);
 	enc.Encode("image.dat", false);
 
-	/*FileStats fImage("image.dat");
-	FileStats fBin("binary.dat");
-	FileStats fAudio("audio.dat");*/
+	enc.Encode("text_H_Comp.dat", false);
+	enc.Encode("audio_H_Comp.dat", false);
+	enc.Encode("binary_H_Comp.dat", false);
+	enc.Encode("image_H_Comp.dat", false);
 
 	// CABAC
 	EncodeUsingCABAC("image.dat", 1);
@@ -44,6 +46,26 @@ void Problem_1_B()
 	EncodeUsingCABAC("binary.dat", 2);
 	EncodeUsingCABAC("binary.dat", 3);
 	EncodeUsingCABAC("binary.dat", 4);
+
+	EncodeUsingCABAC("image_H_Comp.dat", 1);
+	EncodeUsingCABAC("image_H_Comp.dat", 2);
+	EncodeUsingCABAC("image_H_Comp.dat", 3);
+	EncodeUsingCABAC("image_H_Comp.dat", 4);
+
+	EncodeUsingCABAC("text_H_Comp.dat", 1);
+	EncodeUsingCABAC("text_H_Comp.dat", 2);
+	EncodeUsingCABAC("text_H_Comp.dat", 3);
+	EncodeUsingCABAC("text_H_Comp.dat", 4);
+
+	EncodeUsingCABAC("audio_H_Comp.dat", 1);
+	EncodeUsingCABAC("audio_H_Comp.dat", 2);
+	EncodeUsingCABAC("audio_H_Comp.dat", 3);
+	EncodeUsingCABAC("audio_H_Comp.dat", 4);
+
+	EncodeUsingCABAC("binary_H_Comp.dat", 1);
+	EncodeUsingCABAC("binary_H_Comp.dat", 2);
+	EncodeUsingCABAC("binary_H_Comp.dat", 3);
+	EncodeUsingCABAC("binary_H_Comp.dat", 4);
 }
 
 void EncodeUsingCABAC(string strIpFileName, int iCtxSize)

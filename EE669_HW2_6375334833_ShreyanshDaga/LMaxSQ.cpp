@@ -1,3 +1,4 @@
+#include "HW_2.h"
 #include "LMaxSQ.h"
 #include "FileIO.h"
 
@@ -14,8 +15,9 @@ void LMaxSQ::SetTrainingImages(string *strFiles, int iFileNum, int iNumBits)
 {
 	// Set Images
 	this->strTrainFiles = new string[iFileNum];	
-	FileIO **pFiles = new FileIO*[iFileNum];
-	
+	FileIO **pFiles = new FileIO*[iFileNum];	
+	this->iNumBits = iNumBits;
+
 	for (int i = 0; i < iFileNum; i++)
 	{
 		this->strTrainFiles[i] = strFiles[i];
@@ -41,8 +43,10 @@ void LMaxSQ::SetTrainingImages(string *strFiles, int iFileNum, int iNumBits)
 
 void LMaxSQ::TrainImgaes()
 {
+	FILE *fp = fopen("Trainingstats.txt", "w");
+
 	// Plot Histograms
-	unsigned short *puHist = this->CalcHist(this->pcTrainingData);
+	unsigned int *puHist = this->CalcHist(this->pcTrainingData);
 	// Write histogram here
 	/// DEBUG
 	for (int i = 0; i < 256; i++)
@@ -61,6 +65,8 @@ void LMaxSQ::TrainImgaes()
 	// MSE for ItCount = 1 cout, to file
 	this->fPSNR = 10 * log10f(pow(255, 2) / this->fCurrMSE);
 	// Cout PSNR, to file
+	fprintf(fp, "\n Iteration: 1, PSNR: %f, MSE: %f", this->fPSNR, this->fCurrMSE);
+
 	while (this->fDistRate > 0.001)
 	{
 		// Cout ItCount, to file
@@ -79,16 +85,17 @@ void LMaxSQ::TrainImgaes()
 		this->fPSNR = 10 * log10f(pow(255, 2) / this->fCurrMSE);
 		// Cout PSNR to file
 		/// DEBUG
-		cout << " " << this->fPSNR;
+		fprintf(fp, "\n Iteration: %d, PSNR: %f, DistRate: %f,MSE: %f", iItCount, this->fPSNR, this->fDistRate, this->fCurrMSE);
 		///
 	}
 
 	cout << "Training Done!";
+	fclose(fp);
 }
 
-unsigned short* LMaxSQ::CalcHist(unsigned char *pcData)
+unsigned int* LMaxSQ::CalcHist(unsigned char *pcData)
 {
-	unsigned short *puHist = new unsigned short[256];
+	unsigned int *puHist = new unsigned int[256];
 	
 	for (int i = 0; i < 256; i++) 
 	{
@@ -147,7 +154,7 @@ void LMaxSQ::CalculateIntervals()
 }
 
 // Calc new values of centroid
-void LMaxSQ::CalculateNewLevels(unsigned short *puHist)
+void LMaxSQ::CalculateNewLevels(unsigned int *puHist)
 {
 	int iN = 0, iD = 0, iLow, iHigh;
 
@@ -233,8 +240,11 @@ void LMaxSQ::WriteFinalStats()
 void LMaxSQ::Quantize(string fileName)
 {
 	FileIO fileIP(fileName.c_str(), false);
-	
-	FileIO fileOP("ouput_Q2_moon.raw", true);
+	char strName[30];
+	sprintf(strName, "_%dbit_SQ_Output.raw", this->iNumBits);
+	string strOPFileName = GenerateOpFileName(fileName, strName);
+
+	FileIO fileOP(strOPFileName, true);
 
 	for (int i = 0; i < fileIP.GetFileSize(); i++)
 	{
@@ -242,6 +252,14 @@ void LMaxSQ::Quantize(string fileName)
 		unsigned char cOPByte = floor(this->GetQValue(cIPByte) + 0.5);
 		fileOP.WriteByteToFile(cOPByte);
 	}
+	fileOP.CloseFile();
 
-	// Write Final Statss
+	// Write Final Stats
+	FileIO fileStats(strOPFileName.c_str(), false);
+	string strStats = GenerateOpFileName(strOPFileName, "_stats_Q2A.txt");
+
+	float fPSNR = GetPSNR(fileStats.fileBuffer, fileIP.fileBuffer, fileIP.GetFileSize());
+	FILE *fp = fopen(strStats.c_str(), "w");
+	fprintf(fp, "PSNR: %f", fPSNR);
+
 }

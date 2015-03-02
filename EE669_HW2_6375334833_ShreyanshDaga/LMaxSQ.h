@@ -17,17 +17,18 @@ class LMaxSQ
 		int iNumIter;
 		string *strTrainFiles;
 		int iFinalSize;
+		int iNumBits;
 
 	public:
 		LMaxSQ();
 		void SetTrainingImages(string *strFiles, int iFileNum, int iNumBits);
 		void TrainImgaes();
-		unsigned short* CalcHist(unsigned char *pcData);
+		unsigned int* CalcHist(unsigned char *pcData);
 		void PlotHistograms(string *strFiles, int iFileNum);
 		void SetQLevel(int iNumBits);
 		void InitIntervals();
 		void CalculateIntervals();
-		void CalculateNewLevels(unsigned short *puHist);
+		void CalculateNewLevels(unsigned int *puHist);
 		void PrintTPoints();
 		void PrintCentroids();
 		float GetMSE(unsigned char *pcTrainingData);
